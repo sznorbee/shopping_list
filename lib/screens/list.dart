@@ -10,27 +10,28 @@ class ListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Your Groceries'),
       ),
-      body: ListView(
-        children: [
-          for (final item in groceryItems)
-            ListTile(
-              leading: Checkbox(
-                value: false,
-                onChanged: (value) {},
-                checkColor: Colors.white,
-                fillColor: MaterialStateProperty.all(item.category.color),
-                side: BorderSide(
-                  color: item.category.color,
-                  width: 3,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
-                ),
+      body: ListView.builder(
+        itemCount: groceryItems.length,
+        itemBuilder: (context, index) {
+          final item = groceryItems[index];
+          return ListTile(
+            leading: Checkbox(
+              value: false,
+              onChanged: (value) {},
+              checkColor: Colors.white,
+              fillColor: MaterialStateProperty.all(item.category.color),
+              side: BorderSide(
+                color: item.category.color,
+                width: 3,
               ),
-              title: Text(item.name),
-              trailing: Text(item.quantity.toString()),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
             ),
-        ],
+            title: Text(item.name),
+            trailing: Text(item.quantity.toString()),
+          );
+        },
       ),
     );
   }
