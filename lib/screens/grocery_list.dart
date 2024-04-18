@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/data/dummy_items.dart';
 
-class ListScreen extends StatelessWidget {
-  const ListScreen({super.key});
+class GroceryList extends StatelessWidget {
+  const GroceryList({super.key});
 
   @override
   Widget build(BuildContext context) {
