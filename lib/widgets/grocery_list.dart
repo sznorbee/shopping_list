@@ -77,6 +77,7 @@ class _GroceryListState extends State<GroceryList> {
     setState(() {
       _groceryItems.remove(item);
     });
+
     final url = Uri.https(
       'flutter-shopping-list-f923a-default-rtdb.europe-west1.firebasedatabase.app',
       'shopping-list/${item.id}.json',
@@ -100,24 +101,6 @@ class _GroceryListState extends State<GroceryList> {
         _groceryItems.insert(index, item);
       });
       return;
-    }
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Item deleted'),
-          duration: const Duration(seconds: 2),
-          action: SnackBarAction(
-            label: 'UNDO',
-            onPressed: () {
-              setState(() {
-                _groceryItems.insert(index, item);
-              });
-            },
-          ),
-        ),
-      );
     }
   }
 
