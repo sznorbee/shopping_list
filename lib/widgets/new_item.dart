@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/data/categories.dart';
+import 'package:shopping_list/models/category.dart';
+import 'package:shopping_list/models/grocery_item.dart';
 
 class NewItem extends StatefulWidget {
   const NewItem({super.key});
@@ -10,11 +12,19 @@ class NewItem extends StatefulWidget {
 
 class _NewItemState extends State<NewItem> {
   final _formKey = GlobalKey<FormState>();
+  var _currentName = '';
+  var _currentQuantity = 1;
+  var _currentCategory = categories[Categories.fruit]!;
 
   void _saveItem() {
     if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       // Save item
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(GroceryItem(
+          id: DateTime.now().toString(),
+          name: _currentName,
+          quantity: _currentQuantity,
+          category: _currentCategory));
     }
   }
 
@@ -42,6 +52,9 @@ class _NewItemState extends State<NewItem> {
                   }
                   return null;
                 },
+                onSaved: (value) {
+                  _currentName = value!;
+                },
               ),
               Row(
                 children: [
@@ -59,12 +72,16 @@ class _NewItemState extends State<NewItem> {
                         }
                         return null;
                       },
+                      onSaved: (value) {
+                        _currentQuantity = int.parse(value!);
+                      },
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: DropdownButtonFormField(
                       decoration: const InputDecoration(labelText: 'Category'),
+                      value: _currentCategory,
                       items: categories.values.map((category) {
                         return DropdownMenuItem(
                           value: category,
@@ -81,7 +98,11 @@ class _NewItemState extends State<NewItem> {
                           ),
                         );
                       }).toList(),
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        setState(() {
+                          _currentCategory = value as Category;
+                        });
+                      },
                     ),
                   ),
                 ],
