@@ -9,6 +9,15 @@ class NewItem extends StatefulWidget {
 }
 
 class _NewItemState extends State<NewItem> {
+  final _formKey = GlobalKey<FormState>();
+
+  void _saveItem() {
+    if (_formKey.currentState!.validate()) {
+      // Save item
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,11 +27,21 @@ class _NewItemState extends State<NewItem> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Name'),
                 maxLength: 50,
+                validator: (value) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      value.trim().length <= 1 ||
+                      value.trim().length > 50) {
+                    return 'Please enter a name between 1 and 50 characters.';
+                  }
+                  return null;
+                },
               ),
               Row(
                 children: [
@@ -30,6 +49,16 @@ class _NewItemState extends State<NewItem> {
                     child: TextFormField(
                       decoration: const InputDecoration(labelText: 'Quantity'),
                       keyboardType: TextInputType.number,
+                      initialValue: '1',
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            int.tryParse(value) == null ||
+                            int.tryParse(value)! <= 0) {
+                          return 'Please enter a valid quantity.';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -58,12 +87,12 @@ class _NewItemState extends State<NewItem> {
                 ],
               ),
               const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                TextButton(onPressed: () {}, child: const Text('Cancel')),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                TextButton(
+                    onPressed: () => _formKey.currentState!.reset(),
+                    child: const Text('Cancel')),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _saveItem,
                   child: const Text('Add Item'),
                 )
               ]),
